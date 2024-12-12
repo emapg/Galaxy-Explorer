@@ -56,11 +56,11 @@
         });
 
         const galaxyVertices = [];
-        const numStars = 10000;
+        const numStars = 20000;
         for (let i = 0; i < numStars; i++) {
-            const x = THREE.MathUtils.randFloatSpread(200);
-            const y = THREE.MathUtils.randFloatSpread(200);
-            const z = THREE.MathUtils.randFloatSpread(200);
+            const x = THREE.MathUtils.randFloatSpread(300);
+            const y = THREE.MathUtils.randFloatSpread(300);
+            const z = THREE.MathUtils.randFloatSpread(300);
             galaxyVertices.push(x, y, z);
         }
 
@@ -69,9 +69,36 @@
         const galaxy = new THREE.Points(galaxyGeometry, galaxyMaterial);
         scene.add(galaxy);
 
+        // Planets
+        const planetMaterial = new THREE.MeshStandardMaterial({ color: 0x8888ff });
+        const planetGeometry = new THREE.SphereGeometry(3, 32, 32);
+
+        const planets = [];
+        for (let i = 0; i < 5; i++) {
+            const planet = new THREE.Mesh(planetGeometry, planetMaterial);
+            planet.position.set(
+                THREE.MathUtils.randFloatSpread(100),
+                THREE.MathUtils.randFloatSpread(100),
+                THREE.MathUtils.randFloatSpread(100)
+            );
+            scene.add(planet);
+            planets.push(planet);
+        }
+
+        // Light
+        const light = new THREE.PointLight(0xffffff, 1);
+        light.position.set(50, 50, 50);
+        scene.add(light);
+
         // Animation Loop
         function animate() {
             requestAnimationFrame(animate);
+
+            planets.forEach((planet, index) => {
+                planet.rotation.y += 0.01;
+                planet.rotation.x += 0.005;
+            });
+
             controls.update();
             renderer.render(scene, camera);
         }
